@@ -1,7 +1,6 @@
 import datetime
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.core import serializers
-from django.http import HttpResponseRedirect
 from main.forms import ProductForm
 from django.urls import reverse
 from django.shortcuts import render
@@ -112,10 +111,9 @@ def delete_product(request, id):
     return HttpResponseRedirect(reverse('main:show_main'))
 
 def get_product_json(request):
-    product_item = Product.objects.all()
+    product_item = Product.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', product_item))
 
-...
 @csrf_exempt
 def add_product_ajax(request):
     if request.method == 'POST':
